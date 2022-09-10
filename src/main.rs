@@ -12,7 +12,7 @@ pub use rect::Rect;
 
 
 pub struct State {
-    ecs: World
+    pub ecs: World
 }
 
 impl State {
@@ -28,8 +28,7 @@ impl GameState for State {
         player_input(self, ctx);
         self.run_systems();
 
-        let map = self.ecs.fetch::<Vec<TileType>>();
-        draw_map(&map, ctx);
+        draw_map(&self.ecs, ctx);
 
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
@@ -52,10 +51,10 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<Player>();
 
-    let (rooms, map) = new_map_rooms_and_corridors();
+    let map : Map = Map::new_map_rooms_and_corridors();
+    let (player_x, player_y) = map.rooms[0].center();
     gs.ecs.insert(map);
-    let (player_x, player_y) = rooms[0].center();
-    
+
     gs.ecs
     .create_entity()
         .with(Position { x: player_x, y: player_y })
