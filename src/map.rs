@@ -1,5 +1,5 @@
 use rltk::{ RGB, Rltk, RandomNumberGenerator, Algorithm2D, BaseMap, Point };
-use crate::{Viewshed, Player};
+//use crate::{Viewshed, Player};
 
 use super::{Rect};
 use std::cmp::{ max, min };
