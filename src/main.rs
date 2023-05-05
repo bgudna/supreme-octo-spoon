@@ -93,6 +93,7 @@ fn main() -> rltk::BError {
             bg: RGB::named(rltk::BLACK),
         })
         .with(Player{})
+        .with(CombatStats{ max_hp: 50, defense: 2, hp: 30, power: 5})
         .with(Viewshed{ visible_tiles : Vec::new(), range : 8, dirty: true})
         .with(Name{ name: "Player".to_string()})
         .build();
@@ -118,6 +119,7 @@ fn main() -> rltk::BError {
             })
             .with(Viewshed{ visible_tiles: Vec::new(), range: 8, dirty: true})
             .with(Monster{})
+            .with(CombatStats{ max_hp: 16, defense: 1, hp: 16, power: 4})
             .with(Name{ name: format!("{} #{}", &name, i) })
             .with(BlocksTile{})
             .build();
