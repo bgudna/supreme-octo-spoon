@@ -19,6 +19,7 @@ mod melee_combat_system;
 use melee_combat_system::MeleeCombatSystem;
 mod damage_system;
 use damage_system::DamageSystem;
+mod gui;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {  AwaitingInput, PreRun, PlayerTurn, MonsterTurn }
@@ -86,6 +87,8 @@ impl GameState for State {
             let idx = map.xy_idx(pos.x, pos.y);
             if map.visible_tiles[idx] { ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph) }
         }
+
+        gui::draw_ui(&self.ecs, ctx);
     }
 }
 
