@@ -20,6 +20,7 @@ use melee_combat_system::MeleeCombatSystem;
 mod damage_system;
 use damage_system::DamageSystem;
 mod gui;
+mod gamelog;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum RunState {  AwaitingInput, PreRun, PlayerTurn, MonsterTurn }
@@ -95,9 +96,10 @@ impl GameState for State {
 
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
-    let context = RltkBuilder::simple80x50()
+    let mut context = RltkBuilder::simple80x50()
         .with_title("RogusMaximusRusticus")
         .build()?;
+    context.with_post_scanlines(true);
     let mut gs = State {
         ecs: World::new(),
         //runState : RunState::Running
@@ -126,9 +128,9 @@ fn main() -> rltk::BError {
             bg: RGB::named(rltk::BLACK),
         })
         .with(Player{})
-        .with(CombatStats{ max_hp: 50, defense: 2, hp: 30, power: 5})
         .with(Viewshed{ visible_tiles : Vec::new(), range : 8, dirty: true})
         .with(Name{ name: "Paul".to_string()})
+        .with(CombatStats{ max_hp: 50, defense: 2, hp: 30, power: 5})
         .build();
     
     let mut rng = rltk::RandomNumberGenerator::new();
@@ -152,9 +154,9 @@ fn main() -> rltk::BError {
             })
             .with(Viewshed{ visible_tiles: Vec::new(), range: 8, dirty: true})
             .with(Monster{})
-            .with(CombatStats{ max_hp: 16, defense: 1, hp: 16, power: 4})
             .with(Name{ name: format!("{} #{}", &name, i) })
             .with(BlocksTile{})
+            .with(CombatStats{ max_hp: 16, defense: 1, hp: 16, power: 4})
             .build();
     }
     
@@ -162,6 +164,7 @@ fn main() -> rltk::BError {
     gs.ecs.insert(Point::new(player_x, player_y));
     gs.ecs.insert(player_entity);
     gs.ecs.insert(RunState::PreRun);
+    gs.ecs.insert(gamelog::GameLog{ entries : vec!["You have entered Der WienerSchnitzel".to_string()] });
 
     //gs.ecs.insert(new_map_rooms_and_corridors());    
     rltk::main_loop(context, gs)
